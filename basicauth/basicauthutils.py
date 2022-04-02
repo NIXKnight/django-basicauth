@@ -2,10 +2,10 @@ import base64
 import binascii
 
 from django.conf import settings
-from django.utils.crypto import constant_time_compare
 
 from .compat import unquote_plus
 
+from passlib.hash import bcrypt_sha256
 
 def extract_basicauth(authorization_header, encoding='utf-8'):
     splitted = authorization_header.split(' ')
@@ -56,13 +56,11 @@ def validate_request(request):
 
     username, password = ret
 
-    raw_pass = settings.BASICAUTH_USERS.get(username)
-    if raw_pass is None:
+    encrypted_password = settings.BASICAUTH_USERS.get(username)
+    if encrypted_password is None:
         return False
 
-    # To avoid timing atacks
-    # https://security.stackexchange.com/questions/83660/simple-string-comparisons-not-secure-against-timing-attacks
-    if not constant_time_compare(raw_pass, password):
+    if not bcrypt_sha256.verify(password, encrypted_password):
         return False
 
     request.META['REMOTE_USER'] = username

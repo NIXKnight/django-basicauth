@@ -6,6 +6,7 @@ Author
 * Adam Venturella (aventurella@gmail.com)
 * Tim Heap (hello@timheap.me)
 * rhoboro
+* Saad Ali (engr.saadali786@gmail.com)
 
 Bug reporting
 =============
